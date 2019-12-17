@@ -4792,6 +4792,13 @@ mkdirp@^0.5.1, mkdirp@~0.5.1:
   dependencies:
     minimist "0.0.8"
 
+morse@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/morse/-/morse-0.1.0.tgz#1d71165f15b38db3285a29d0342d30e582e2c14c"
+  integrity sha1-HXEWXxWzjbMoWinQNC0w5YLiwUw=
+  dependencies:
+    optimist "*"
+
 move-concurrently@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/move-concurrently/-/move-concurrently-1.0.1.tgz#be2c005fda32e0b29af1f05d7c4b33214c701f92"
@@ -5141,7 +5148,7 @@ opn@^5.5.0:
   dependencies:
     is-wsl "^1.1.0"
 
-optimist@^0.6.1:
+optimist@*, optimist@^0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/optimist/-/optimist-0.6.1.tgz#da3ea74686fa21a19a111c326e90eb15a0196686"
   integrity sha1-2j6nRob6IaGaERwybpDrFaAZZoY=
