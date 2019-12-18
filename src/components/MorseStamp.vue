@@ -35,22 +35,20 @@ import morse from 'morse'
 
 const O = 100 // 中央
 const R = 90 // モールスの円の半径
-const MORSE_STARTS_DEG = -135 // コミックス3巻によると左斜め上から時計回りに読むらしい
+const CHAR_OFFSET = 2 // 符号ごとの間隔
+const DOT_AND_SPACE_WIDTH = 9 // `.` と ` ` の幅
+const MORSE_HEAD_DEGREE = -135 // コミックス3巻によると左斜め上から時計回りに読むらしい
 
-const DOT = 1
-const BAR = 2
-const SPACE = 3
+const degreeToRadian = (degree) => degree * Math.PI / 180
 
-const degToRad = (deg) => deg * Math.PI / 180
-
-const getSignPathDValue = (deg1, deg2) => {
-  const rad1 = degToRad(deg1 + 2)
-  const rad2 = degToRad(deg2 - 2)
-  const x1 = Math.sin(rad1) * R + O
-  const y1 = Math.cos(rad1) * R + O
-  const x2 = Math.sin(rad2) * R + O
-  const y2 = Math.cos(rad2) * R + O
-  const f1 = (deg2 - deg1) >= 180 ? 1 : 0
+const getPathTagDAttrValue = (degree1, degree2) => {
+  const radian1 = degreeToRadian(degree1 + CHAR_OFFSET)
+  const radian2 = degreeToRadian(degree2 - CHAR_OFFSET)
+  const x1 = Math.sin(radian1) * R + O
+  const y1 = Math.cos(radian1) * R + O
+  const x2 = Math.sin(radian2) * R + O
+  const y2 = Math.cos(radian2) * R + O
+  const f1 = (degree2 - degree1) >= 180 ? 1 : 0
   return `M ${y1},${x1} A ${R} ${R} 0 ${f1} 1 ${y2},${x2}`
 }
 
@@ -67,31 +65,24 @@ export default {
     }
   },
   computed: {
-    morse() {
-      return morse.encode(this.message)
-    },
     signPathes() {
       const morseString = morse.encode(this.message)
-      const signs = `${morseString} `.split('').map(s => {
-        if (s === '.') return DOT
-        if (s === '-') return BAR
-        return SPACE
-      })
-      const barCount = signs.filter(sign => sign === BAR).length
-      const dotAndSpaceCount = signs.length - barCount
-      const dotAndSpaceWidth = 9
-      const barWidth = (360 - dotAndSpaceWidth * dotAndSpaceCount) / barCount
-      let prevStartDeg = MORSE_STARTS_DEG
+      const chars = `${morseString} `.split('')
+      const barCount = chars.filter(sign => sign === '-').length
+      const dotAndSpaceCount = chars.length - barCount
+      const barWidth = (360 - DOT_AND_SPACE_WIDTH * dotAndSpaceCount) / barCount
+      let previousEndDegree = MORSE_HEAD_DEGREE
 
-      return signs.map(sign => {
-        const signWidth = sign === BAR ? barWidth : dotAndSpaceWidth
-        const startDeg = prevStartDeg
-        const endDeg = startDeg + signWidth
-        prevStartDeg = endDeg
-        if (sign === SPACE) {
+      return chars.map(char => {
+        const charWidth = char === '-' ? barWidth : DOT_AND_SPACE_WIDTH
+        const startDegree = previousEndDegree
+        const endDegree = startDegree + charWidth
+        previousEndDegree = endDegree
+        if (char === ' ') {
           return ''
         }
-        return getSignPathDValue(startDeg, endDeg)
+        // pathタグのd属性の値を取得
+        return getPathTagDAttrValue(startDegree, endDegree)
       }).filter(s => s !== '')
     },
   },
