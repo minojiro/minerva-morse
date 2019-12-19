@@ -1,3 +1,3 @@
 module.exports = {
-  publicPath: 'https://minerva-morse-evtbiligq.now.sh/',
+  publicPath: 'https://minerva-morse-git-master.minojiro.now.sh/',
 }
